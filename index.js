@@ -1,7 +1,9 @@
 const config = require("./config");
 const express = require("express");
 const mongoose = require("mongoose");
-const Books = require("./Models/Books");
+const body_parser = require('body-parser')
+const cors = require('cors')
+const Book = require("./Models/Books");
 let requestNum = 1;
 
 //Connect to db
@@ -15,15 +17,15 @@ db.on('error', err => {
     console.log(`Database connection error : ${err}`)
 })
 
-const showAllBooks = async () => {
-  const BookList = await Books.find() 
+const showAllBook = async () => {
+  const BookList = await Book.find() 
   console.log(`BookList of length ${BookList.length}\n`)
   BookList.map((item) => JSON.stringify(item))
 }
-showAllBooks()
+showAllBook()
 
 const app = express();
-console.log(JSON.stringify(config));
+app.use(cors())
 
 app.use((req, res, next) => {
   console.log(
@@ -32,6 +34,7 @@ app.use((req, res, next) => {
   requestNum += 1;
   next();
 });
+app.use(body_parser.json())
 
 app.get("/", (req, res) => {
   res.status(234).send("XAI");
@@ -43,6 +46,25 @@ app.get("/test", (req, res) => {
     message: "We are live.",
   });
 });
+
+app.post('/addbook',(req,res) => {
+  let newBook = {}
+  if(req.body.hasOwnProperty('title') && req.body.hasOwnProperty('author') && req.body.hasOwnProperty('isbn') && req.body.hasOwnProperty('genre')){
+    newBook.title = req.body.title
+    newBook.isbn = req.body.isbn
+    newBook.author = req.body.author
+    newBook.genre = req.body.genre
+    let book = new Book(newBook)
+    book.save().then(() => console.log("Book saved.")).catch((err) => console.log(`Error saving book : ${err}`))
+    
+  }
+  else{
+   return res.status(400).send("Failed!") 
+  }
+
+})
+
+app.get
 
 app.listen(config.PORT, () => {
   console.log(`Listening on port ${config.PORT}.`);

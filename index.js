@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const body_parser = require('body-parser')
 const cors = require('cors')
 const Book = require("./Models/Books");
+const startController = require("./Controllers/StartController");
 let requestNum = 1;
 
 //Connect to db
@@ -17,12 +18,6 @@ db.on('error', err => {
     console.log(`Database connection error : ${err}`)
 })
 
-const showAllBook = async () => {
-  const BookList = await Book.find() 
-  console.log(`BookList of length ${BookList.length}\n`)
-  BookList.map((item) => JSON.stringify(item))
-}
-showAllBook()
 
 const app = express();
 app.use(cors())
@@ -64,7 +59,7 @@ app.post('/addbook',(req,res) => {
 
 })
 
-app.get
+app.get('/start', startController)
 
 app.listen(config.PORT, () => {
   console.log(`Listening on port ${config.PORT}.`);

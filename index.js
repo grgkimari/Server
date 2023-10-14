@@ -5,6 +5,7 @@ const body_parser = require('body-parser')
 const cors = require('cors')
 const Book = require("./Models/Books");
 const startController = require("./Controllers/StartController");
+const searchController = require("./Controllers/SearchController");
 let requestNum = 1;
 
 //Connect to db
@@ -60,6 +61,7 @@ app.post('/addbook',(req,res) => {
 })
 
 app.get('/start', startController)
+app.get('/search', searchController)
 
 app.listen(config.PORT, () => {
   console.log(`Listening on port ${config.PORT}.`);

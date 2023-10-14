@@ -2,7 +2,7 @@ const Book = require("../Models/Books");
 
 const fetchStartBooks = async () => {
   try {
-    const books = await Book.find().limit(5).exec();
+    const books = await Book.find().limit(15).exec();
     return books;
   } catch (err) {
     console.log(err);
